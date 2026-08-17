@@ -4,7 +4,7 @@ import connectDb from "./config/db.js";
 import testRoutes from "./routes/test.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
-
+import conversationRoutes from "./routes/conversation.routes.js";
 dotenv.config();
 
 const app = express();
@@ -17,6 +17,7 @@ app.use(express.json());
 app.use("/api/test", testRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/conversation", conversationRoutes);
 
 app.listen(port, () => {
     connectDb();
