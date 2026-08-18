@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import conversationRoutes from "./routes/conversation.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
+import memoryRoutes from "./routes/memory.routes.js";
 dotenv.config();
 
 const app = express();
@@ -20,6 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/conversation", conversationRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/memory", memoryRoutes);
 
 app.listen(port, () => {
     connectDb();

@@ -1,5 +1,43 @@
-const callAI = async (message) => {
+const callAI = async (
+    message,
+    conversationContext = "",
+    memoryContext = ""
+) => {
     try {
+        const messages = [
+            {
+                role: "system",
+                content:
+                    "You are a helpful personal AI assistant. Give clear, accurate and easy-to-understand answers.",
+            },
+        ];
+
+        // Add previous conversation context
+        if (conversationContext) {
+            messages.push({
+                role: "system",
+                content: `Here is the user's recent conversation history. Use it only when it is relevant to the current question:
+
+${conversationContext}`,
+            });
+        }
+
+        // Add user's long-term memories
+        if (memoryContext) {
+            messages.push({
+                role: "system",
+                content: `Here are some important facts remembered about the user. Use them only when they are relevant to the current request:
+
+${memoryContext}`,
+            });
+        }
+
+        // Add current user message
+        messages.push({
+            role: "user",
+            content: message,
+        });
+
         const response = await fetch(
             "https://openrouter.ai/api/v1/chat/completions",
             {
@@ -12,18 +50,7 @@ const callAI = async (message) => {
 
                 body: JSON.stringify({
                     model: "openrouter/free",
-
-                    messages: [
-                        {
-                            role: "system",
-                            content:
-                                "You are a helpful personal AI assistant. Give clear, accurate and easy-to-understand answers.",
-                        },
-                        {
-                            role: "user",
-                            content: message,
-                        },
-                    ],
+                    messages,
                 }),
             }
         );
