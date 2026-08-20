@@ -80,9 +80,19 @@ If there is nothing important to remember, return:
             return [];
         }
 
-        const result = JSON.parse(content);
+     try {
+    const cleanedContent = content
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
 
-        return result.memories || [];
+    const result = JSON.parse(cleanedContent);
+
+    return result.memories || [];
+} catch (parseError) {
+    console.error("Memory JSON Parse Error:", parseError);
+    return [];
+}
 
     } catch (error) {
         console.error("Memory Service Error:", error);

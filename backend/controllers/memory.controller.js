@@ -7,27 +7,29 @@ export const saveMemory = async (req, res) => {
     try {
         const { key, value } = req.body;
 
-        // Check required fields
-        if (!key || !value) {
-            return res.status(400).json({
-                success: false,
-                message: "Key and value are required",
-            });
-        }
+// Check required fields
+if (!key || !value) {
+    return res.status(400).json({
+        success: false,
+        message: "Key and value are required",
+    });
+}
 
+const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, "_");
+const normalizedValue = value.trim();
         // Create or update memory
         const memory = await Memory.findOneAndUpdate(
             {
                 userId: req.userId,
-                key: key.trim(),
+                key: normalizedKey,
             },
             {
-                value: value.trim(),
+                value: normalizedValue,
             },
-            {
-                new: true,
-                upsert: true,
-            }
+           {
+    returnDocument: "after",
+    upsert: true,
+}
         );
 
         return res.status(200).json({
@@ -78,10 +80,11 @@ export const getMemories = async (req, res) => {
 export const deleteMemory = async (req, res) => {
     try {
         const { key } = req.params;
+        const normalizedKey = key.trim().toLowerCase().replace(/\s+/g, "_");
 
         const memory = await Memory.findOneAndDelete({
             userId: req.userId,
-            key,
+            key: normalizedKey,
         });
 
         if (!memory) {
