@@ -22,8 +22,10 @@ export const chatWithAI = async (req, res) => {
         // 2. Get previous conversations of logged-in user
         // Get user's long-term memories
 const memories = await getUserMemories(req.userId);
-
 const memoryContext = formatMemoriesForAI(memories);
+ tat
+
+ 
         const previousConversations = await Conversation.find({
             userId: req.userId,
         })
@@ -42,10 +44,11 @@ Assistant: ${conversation.response}`;
             .join("\n\n");
 
         // 5. Send current message + previous context to AI
-        const response = await callAI(
-            message.trim(),
-            conversationContext
-        );
+       const response = await callAI(
+    message.trim(),
+    conversationContext,
+    memoryContext
+);
 
         // 6. Save current conversation automatically
         const conversation = await Conversation.create({
@@ -62,21 +65,28 @@ const extractedMemories = await extractMemories(message.trim());
         continue;
     }
 
-    await Memory.findOneAndUpdate(
-        {
-            userId: req.userId,
-            key: memory.key,
-        },
-        {
-            userId: req.userId,
-            key: memory.key,
-            value: memory.value,
-        },
-        {
-            upsert: true,
-            new: true,
-        }
-    );
+   const normalizedKey = memory.key
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "_");
+
+const normalizedValue = memory.value.trim();
+
+await Memory.findOneAndUpdate(
+    {
+        userId: req.userId,
+        key: normalizedKey,
+    },
+    {
+        userId: req.userId,
+        key: normalizedKey,
+        value: normalizedValue,
+    },
+    {
+        upsert: true,
+        returnDocument: "after",
+    }
+);
 }
         // 9. Send response
         return res.status(200).json({
