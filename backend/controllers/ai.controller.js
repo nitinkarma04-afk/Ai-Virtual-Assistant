@@ -5,7 +5,9 @@ import Memory from "../models/memory.model.js";
 import {
     getUserMemories,
     formatMemoriesForAI,
+    normalizeMemoryKey,
 } from "../utils/memory.utils.js";
+import detectIntent from "../services/intent.service.js";
 
 export const chatWithAI = async (req, res) => {
     try {
@@ -18,12 +20,13 @@ export const chatWithAI = async (req, res) => {
                 message: "Message is required",
             });
         }
+        const intent = await detectIntent(message.trim());
 
         // 2. Get previous conversations of logged-in user
         // Get user's long-term memories
 const memories = await getUserMemories(req.userId);
 const memoryContext = formatMemoriesForAI(memories);
- tat
+  
 
  
         const previousConversations = await Conversation.find({
@@ -47,7 +50,8 @@ Assistant: ${conversation.response}`;
        const response = await callAI(
     message.trim(),
     conversationContext,
-    memoryContext
+    memoryContext,
+    intent
 );
 
         // 6. Save current conversation automatically
@@ -65,10 +69,7 @@ const extractedMemories = await extractMemories(message.trim());
         continue;
     }
 
-   const normalizedKey = memory.key
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "_");
+  const normalizedKey = normalizeMemoryKey(memory.key);
 
 const normalizedValue = memory.value.trim();
 

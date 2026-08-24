@@ -46,3 +46,16 @@ export const getRelevantMemories = (memories, message) => {
         );
     });
 };
+
+export const normalizeMemoryKey = (key) => {
+    if (!key) {
+        return "";
+    }
+
+    return key
+        .trim()
+        .replace(/([a-z])([A-Z])/g, "$1_$2")
+        .toLowerCase()
+        .replace(/\s+/g, "_")
+        .replace(/_+/g, "_");
+};
