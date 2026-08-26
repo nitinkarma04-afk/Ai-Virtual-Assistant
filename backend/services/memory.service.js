@@ -98,6 +98,7 @@ Return only JSON.
                 .trim();
 
             const result = JSON.parse(cleanedContent);
+            
 
             if (!Array.isArray(result?.memories)) {
                 return [];

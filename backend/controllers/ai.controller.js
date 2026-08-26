@@ -5,6 +5,7 @@ import Memory from "../models/memory.model.js";
 import {
     getUserMemories,
     formatMemoriesForAI,
+    getRelevantMemories,
     normalizeMemoryKey,
 } from "../utils/memory.utils.js";
 import detectIntent from "../services/intent.service.js";
@@ -25,8 +26,15 @@ export const chatWithAI = async (req, res) => {
         // 2. Get previous conversations of logged-in user
         // Get user's long-term memories
 const memories = await getUserMemories(req.userId);
-const memoryContext = formatMemoriesForAI(memories);
-  
+
+const relevantMemories = getRelevantMemories(
+    memories,
+    message.trim()
+);
+
+const memoryContext = formatMemoriesForAI(
+    relevantMemories
+);
 
  
         const previousConversations = await Conversation.find({
