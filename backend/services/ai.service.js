@@ -1,5 +1,6 @@
 const MAX_CONVERSATION_CONTEXT = 6000;
 const MAX_MEMORY_CONTEXT = 3000;
+const MAX_PROFILE_CONTEXT = 2000;
 
 const limitContext = (context, maxLength) => {
     if (!context) {
@@ -18,7 +19,8 @@ const callAI = async (
     message,
     conversationContext = "",
     memoryContext = "",
-    intent = "general_question"
+    intent = "general_question",
+    profileContext = ""
 ) => {
 
     try {
@@ -40,6 +42,10 @@ const callAI = async (
             memoryContext,
             MAX_MEMORY_CONTEXT
         );
+        const limitedProfileContext = limitContext(
+    profileContext,
+    MAX_PROFILE_CONTEXT
+);
 
         // --------------------------------
         // 3. Create AI messages
@@ -160,7 +166,24 @@ ${limitedMemoryContext}
         }
 
         // --------------------------------
-        // 6. Add intent information
+// 6. Add profile context
+// --------------------------------
+if (limitedProfileContext) {
+    messages.push({
+        role: "system",
+        content: `
+Here is the user's profile information.
+
+Use this profile only when it is relevant to the current request.
+
+Do not invent any additional personal information.
+
+${limitedProfileContext}
+`
+    });
+}
+        // --------------------------------
+        // 7. Add intent information
         // --------------------------------
 
         if (intent) {
@@ -180,7 +203,7 @@ The current user message always has higher priority.
         }
 
         // --------------------------------
-        // 7. Add current user message
+        // 8. Add current user message
         // --------------------------------
 
         messages.push({
@@ -189,7 +212,7 @@ The current user message always has higher priority.
         });
 
         // --------------------------------
-        // 8. Call OpenRouter
+        // 9. Call OpenRouter
         // --------------------------------
 
         const response = await fetch(
@@ -212,7 +235,7 @@ The current user message always has higher priority.
         );
 
         // --------------------------------
-        // 9. Read response
+        // 10. Read response
         // --------------------------------
 
         const data = await response.json();
@@ -228,7 +251,7 @@ The current user message always has higher priority.
         }
 
         // --------------------------------
-        // 10. Extract AI response
+        // 11. Extract AI response
         // --------------------------------
 
         const aiResponse =
