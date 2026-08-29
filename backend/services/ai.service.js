@@ -240,16 +240,18 @@ The current user message always has higher priority.
 
         const data = await response.json();
 
-        if (!response.ok) {
+if (!response.ok) {
+    console.error("OpenRouter Error:", data);
 
-            console.error("OpenRouter Error:", data);
+    const error = new Error(
+        data?.error?.message ||
+        "AI API request failed"
+    );
 
-            throw new Error(
-                data?.error?.message ||
-                "AI API request failed"
-            );
-        }
+    error.statusCode = response.status;
 
+    throw error;
+}
         // --------------------------------
         // 11. Extract AI response
         // --------------------------------
