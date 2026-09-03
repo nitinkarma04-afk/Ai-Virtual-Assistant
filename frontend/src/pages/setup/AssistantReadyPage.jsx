@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   Mic,
   CheckCircle2,
-  Youtube,
+  Video,
   Brain,
   LayoutDashboard,
 } from 'lucide-react'
@@ -83,7 +83,7 @@ export const AssistantReadyPage = () => {
 
             <div className="p-3 rounded-xl bg-slate-900/50 border border-slate-800/80 space-y-1">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-400">
-                <Youtube className="w-3.5 h-3.5" />
+                <Video className="w-3.5 h-3.5" />
                 <span>Actions Engine</span>
               </div>
               <p className="text-[11px] text-slate-400">Opens YouTube, web search, and tools.</p>
@@ -116,3 +116,4 @@ export const AssistantReadyPage = () => {
 }
 
 export default AssistantReadyPage
+

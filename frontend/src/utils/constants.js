@@ -109,3 +109,4 @@ export const WAKE_WORD_TEMPLATES = [
   'Activate {name}',
   'OK {name}',
 ]
+
