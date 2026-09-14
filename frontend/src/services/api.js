@@ -72,8 +72,13 @@ export const authService = {
     return response.data
   },
   getProfile: async () => {
-    const response = await api.get('/auth/me')
-    return response.data
+    try {
+      const response = await api.get('/user/me')
+      return response.data
+    } catch {
+      const response = await api.get('/auth/me')
+      return response.data
+    }
   },
   logout: async () => {
     try {
@@ -88,18 +93,31 @@ export const authService = {
   },
 }
 
-// Assistant Setup & Configuration Services
-export const assistantService = {
-  getAssistant: async () => {
-    const response = await api.get('/assistant')
-    return response.data
-  },
-  setupAssistant: async (data) => {
-    const response = await api.post('/assistant/setup', data)
+// User Services
+export const userService = {
+  getCurrentUser: async () => {
+    const response = await api.get('/user/me')
     return response.data
   },
   updateAssistant: async (data) => {
-    const response = await api.put('/assistant', data)
+    const response = await api.put('/user/assistant', data)
+    return response.data
+  },
+}
+
+// Assistant Configuration Services
+export const assistantService = {
+  getAssistant: async () => {
+    try {
+      const response = await api.get('/user/me')
+      return response.data
+    } catch {
+      const response = await api.get('/assistant')
+      return response.data
+    }
+  },
+  updateAssistant: async (data) => {
+    const response = await api.put('/user/assistant', data)
     return response.data
   },
 }
@@ -107,19 +125,19 @@ export const assistantService = {
 // AI Conversation & History Services
 export const chatService = {
   sendMessage: async (payload) => {
-    const response = await api.post('/chat', payload)
+    const response = await api.post('/ai/chat', {
+      message: payload.message,
+    })
     return response.data
   },
+
   getHistory: async () => {
-    const response = await api.get('/chat/history')
+    const response = await api.get('/conversation/history')
     return response.data
   },
+
   clearHistory: async () => {
-    const response = await api.delete('/chat/history')
-    return response.data
-  },
-  deleteSession: async (sessionId) => {
-    const response = await api.delete(`/chat/history/${sessionId}`)
+    const response = await api.delete('/conversation/history')
     return response.data
   },
 }
@@ -134,23 +152,26 @@ export const memoryService = {
     const response = await api.post('/memory', data)
     return response.data
   },
-  deleteMemory: async (memoryId) => {
-    const response = await api.delete(`/memory/${memoryId}`)
+  deleteMemory: async (key) => {
+    const response = await api.delete(`/memory/${encodeURIComponent(key)}`)
     return response.data
   },
 }
 
-// Assistant Action Execution Services (YouTube, Web Search, etc.)
-export const actionService = {
-  executeAction: async (actionPayload) => {
-    const response = await api.post('/actions/execute', actionPayload)
+// User Profile Services
+export const profileService = {
+  getProfile: async () => {
+    const response = await api.get('/profile')
     return response.data
   },
-  getActionHistory: async () => {
-    const response = await api.get('/actions/history')
+  createProfile: async (data) => {
+    const response = await api.post('/profile', data)
+    return response.data
+  },
+  updateProfile: async (data) => {
+    const response = await api.put('/profile', data)
     return response.data
   },
 }
 
 export default api
-

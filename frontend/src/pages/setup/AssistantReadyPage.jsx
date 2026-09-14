@@ -116,4 +116,3 @@ export const AssistantReadyPage = () => {
 }
 
 export default AssistantReadyPage
-

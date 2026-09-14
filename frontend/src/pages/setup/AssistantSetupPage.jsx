@@ -28,7 +28,6 @@ export const AssistantSetupPage = () => {
   const navigate = useNavigate()
   const { user, assistant: existingAssistant, setAssistantConfig } = useAuth()
 
-  // Pre-populate if already partially configured
   const [assistantName, setAssistantName] = useState(
     existingAssistant?.name || existingAssistant?.assistantName || 'Jarvis'
   )
@@ -48,7 +47,6 @@ export const AssistantSetupPage = () => {
   const [serverError, setServerError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Compute live wake-word trigger
   const computedWakeWord = useCustomWakeWord
     ? customWakeWord.trim() || `Hey ${assistantName}`
     : selectedWakeWordTemplate.replace('{name}', assistantName || 'Assistant')
@@ -82,18 +80,13 @@ export const AssistantSetupPage = () => {
     }
 
     try {
-      // Attempt backend persistence via setupAssistant endpoint
       try {
         await assistantService.setupAssistant(assistantPayload)
       } catch (apiErr) {
-        // If endpoint is optional or returns 404, fallback cleanly to local state persistence
         console.warn('Backend assistant sync notice:', apiErr.message)
       }
 
-      // Update AuthContext & localStorage state
       setAssistantConfig(assistantPayload)
-
-      // Navigate to celebration / Ready screen
       navigate('/assistant-ready', { replace: true })
     } catch (err) {
       console.error('Setup error:', err)
@@ -352,7 +345,6 @@ export const AssistantSetupPage = () => {
             variant="glass"
             className="p-6 sm:p-8 flex flex-col items-center text-center border-slate-800 shadow-2xl relative overflow-hidden"
           >
-            {/* Ambient radial backdrop from selected avatar color */}
             <div
               className={`absolute -top-16 inset-x-0 h-44 ${selectedAvatar.bgGlow} blur-3xl pointer-events-none`}
             />
@@ -361,7 +353,6 @@ export const AssistantSetupPage = () => {
               LIVE PREVIEW
             </Badge>
 
-            {/* Glowing Reactive AI Orb */}
             <div className="my-4">
               <AIOrb
                 size="md"
@@ -380,7 +371,6 @@ export const AssistantSetupPage = () => {
               />
             </div>
 
-            {/* Assistant Identity Summary */}
             <div className="space-y-1.5 mt-2">
               <h3 className="text-xl font-bold text-white tracking-tight">
                 {assistantName || 'Your Assistant'}
@@ -390,7 +380,6 @@ export const AssistantSetupPage = () => {
               </p>
             </div>
 
-            {/* Simulated Live Dialogue Greeting */}
             <div className="mt-6 w-full p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 text-left space-y-2">
               <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono">
                 <span className="flex items-center gap-1.5 text-cyan-400">
@@ -406,7 +395,6 @@ export const AssistantSetupPage = () => {
               </p>
             </div>
 
-            {/* Status Checklist */}
             <div className="mt-6 w-full pt-4 border-t border-slate-800/80 space-y-2 text-left text-xs text-slate-400">
               <div className="flex items-center justify-between">
                 <span>Wake Phrase:</span>
@@ -433,4 +421,3 @@ export const AssistantSetupPage = () => {
 }
 
 export default AssistantSetupPage
-

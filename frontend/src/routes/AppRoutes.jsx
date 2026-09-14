@@ -2,48 +2,18 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { ProtectedRoute } from './ProtectedRoute'
 import { PublicRoute } from './PublicRoute'
-import { useAuth } from '../hooks/useAuth'
 
-// Phase 3 Built Pages
+// Pages
 import { LandingPage } from '../pages/LandingPage'
 import { SignupPage } from '../pages/auth/SignupPage'
 import { LoginPage } from '../pages/auth/LoginPage'
 import { AssistantSetupPage } from '../pages/setup/AssistantSetupPage'
 import { AssistantReadyPage } from '../pages/setup/AssistantReadyPage'
-
-// Phase 4+ Route Placeholders (To be built in subsequent phases)
-const FutureRoutePlaceholder = ({ title, description, badge }) => {
-  const { user, logout, assistant } = useAuth()
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 text-center selection:bg-cyan-500/30 selection:text-cyan-200">
-      <div className="max-w-md w-full p-8 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-xl shadow-2xl space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">
-          {badge || 'Phase 4 Preview'}
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">{title}</h1>
-        <p className="text-sm text-slate-400">{description}</p>
-        {assistant && (
-          <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs text-cyan-300">
-            Active Assistant: <strong>{assistant.name || assistant.assistantName}</strong>
-          </div>
-        )}
-        {user && (
-          <div className="pt-4 border-t border-slate-800/80 flex flex-col items-center gap-3">
-            <span className="text-xs text-slate-500">
-              Authenticated as <strong className="text-slate-300">{user.name || user.email}</strong>
-            </span>
-            <button
-              onClick={logout}
-              className="px-4 py-2 text-xs font-medium bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg border border-rose-500/20 transition-colors cursor-pointer"
-            >
-              Sign Out
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
+import { DashboardPage } from '../pages/dashboard/DashboardPage'
+import { ConversationHistoryPage } from '../pages/history/ConversationHistoryPage'
+import { MemoryVaultPage } from '../pages/memory/MemoryVaultPage'
+import { ProfilePage } from '../pages/profile/ProfilePage'
+import { SettingsPage } from '../pages/settings/SettingsPage'
 
 export const AppRoutes = () => {
   return (
@@ -87,64 +57,52 @@ export const AppRoutes = () => {
         }
       />
 
-      {/* Protected App Routes (Phase 4+ Targets) */}
+      {/* Protected App Dashboard */}
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute requireAssistant>
-            <FutureRoutePlaceholder
-              title="AI Dashboard & Live Command Center"
-              badge="Phase 4 Target"
-              description="Real-time assistant visualizer, live microphone streaming, wake-word engine, and interactive chat canvas."
-            />
+            <DashboardPage />
           </ProtectedRoute>
         }
       />
+
+      {/* Protected Conversation History Route */}
       <Route
         path="/history"
         element={
           <ProtectedRoute requireAssistant>
-            <FutureRoutePlaceholder
-              title="Conversation History"
-              badge="Phase 5 Target"
-              description="Searchable past interaction sessions and timeline logs."
-            />
+            <ConversationHistoryPage />
           </ProtectedRoute>
         }
       />
+
+      {/* Protected Memory Vault Route */}
       <Route
         path="/memory"
         element={
           <ProtectedRoute requireAssistant>
-            <FutureRoutePlaceholder
-              title="Memory Vault"
-              badge="Phase 5 Target"
-              description="Long-term assistant learned facts, preferences, and knowledge repository."
-            />
+            <MemoryVaultPage />
           </ProtectedRoute>
         }
       />
+
+      {/* Protected User Profile Route */}
       <Route
         path="/profile"
         element={
           <ProtectedRoute>
-            <FutureRoutePlaceholder
-              title="User Profile"
-              badge="Phase 5 Target"
-              description="User credentials, assistant metadata, and activity statistics."
-            />
+            <ProfilePage />
           </ProtectedRoute>
         }
       />
+
+      {/* Protected Settings Route */}
       <Route
         path="/settings"
         element={
           <ProtectedRoute>
-            <FutureRoutePlaceholder
-              title="Application Settings"
-              badge="Phase 5 Target"
-              description="Audio pitch/speed calibration, wake-word sensitivity, and theme glows."
-            />
+            <SettingsPage />
           </ProtectedRoute>
         }
       />

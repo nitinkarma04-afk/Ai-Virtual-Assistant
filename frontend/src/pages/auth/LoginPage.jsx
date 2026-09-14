@@ -62,11 +62,9 @@ export const LoginPage = () => {
         password: formData.password,
       })
 
-      // Check if user has an assistant configured in response or stored
       const assistant = loginRes?.assistant || loginRes?.data?.assistant
       const hasConfiguredAssistant = Boolean(assistant && (assistant.name || assistant.assistantName))
 
-      // If user came from a protected route, preserve destination; otherwise route intelligently
       const fromPath = location.state?.from?.pathname
       if (fromPath && fromPath !== '/login' && fromPath !== '/signup') {
         navigate(fromPath, { replace: true })
@@ -172,4 +170,3 @@ export const LoginPage = () => {
 }
 
 export default LoginPage
-

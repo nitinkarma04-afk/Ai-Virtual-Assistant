@@ -25,7 +25,6 @@ export const SignupPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-    // Clear field-specific error on change
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
     }
@@ -74,7 +73,6 @@ export const SignupPage = () => {
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
       })
-      // Direct newly signed-up user to Assistant Setup onboarding
       navigate('/assistant-setup', { replace: true })
     } catch (err) {
       console.error('Signup error:', err)
@@ -223,4 +221,3 @@ export const SignupPage = () => {
 }
 
 export default SignupPage
-
