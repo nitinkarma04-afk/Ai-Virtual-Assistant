@@ -142,14 +142,17 @@ export const ProfilePage = () => {
     }
   }
 
+  const inputClass =
+    'w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 dark:focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-400/30 dark:focus:ring-cyan-500/30 transition-all font-sans'
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-700 dark:selection:text-cyan-200 relative overflow-x-hidden transition-colors duration-200">
       {/* Ambient Lighting */}
-      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="fixed bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="fixed bottom-10 right-10 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Header */}
-      <header className="w-full px-4 sm:px-6 py-4 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 sticky top-0 z-40">
+      <header className="w-full px-4 sm:px-6 py-4 backdrop-blur-xl bg-white/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link to="/dashboard">
@@ -157,24 +160,24 @@ export const ProfilePage = () => {
                 variant="ghost"
                 size="sm"
                 icon={ArrowLeft}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 title="Return to Dashboard"
               >
                 <span className="hidden sm:inline">Dashboard</span>
               </Button>
             </Link>
 
-            <div className="h-5 w-[1px] bg-slate-800 hidden sm:block" />
+            <div className="h-5 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block" />
 
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
                 <User className="w-4 h-4" />
               </div>
               <div>
-                <h1 className="text-base font-bold text-white tracking-tight leading-none">
-                  User Profile
+                <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight leading-none">
+                  Your Profile
                 </h1>
-                <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                   {user?.name || user?.email}
                 </p>
               </div>
@@ -189,7 +192,7 @@ export const ProfilePage = () => {
               onClick={() => fetchProfile(true)}
               disabled={isLoading}
               title="Refresh profile"
-              className="text-slate-400 hover:text-cyan-300"
+              className="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300"
             />
           </div>
         </div>
@@ -198,38 +201,38 @@ export const ProfilePage = () => {
       {/* Main Content */}
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 relative z-10 space-y-6">
         {/* User Card */}
-        <div className="p-6 sm:p-7 rounded-3xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-xl shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 backdrop-blur-xl shadow-sm dark:shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-indigo-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-300 shadow-xl shadow-cyan-500/10">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-indigo-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-600 dark:text-cyan-300 shadow-xl shadow-cyan-500/10">
               <User className="w-8 h-8" />
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  {user?.name || 'Neural User'}
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  {user?.name || 'Your Account'}
                 </h2>
                 <Badge variant="cyan" className="text-[10px]">
-                  Verified Session
+                  Active
                 </Badge>
               </div>
-              <p className="text-xs text-slate-400 font-mono">{user?.email}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">{user?.email}</p>
             </div>
           </div>
         </div>
 
         {/* Notifications */}
         {successMessage && (
-          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-emerald-300 text-sm animate-fadeIn">
-            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-400" />
+          <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-3 text-emerald-700 dark:text-emerald-300 text-sm animate-fadeIn">
+            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-500 dark:text-emerald-400" />
             <span className="flex-1">{successMessage}</span>
           </div>
         )}
 
         {error && (
-          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-3 text-rose-300 text-sm">
-            <AlertCircle className="w-5 h-5 shrink-0 text-rose-400 mt-0.5" />
+          <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 flex items-start gap-3 text-rose-600 dark:text-rose-300 text-sm">
+            <AlertCircle className="w-5 h-5 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
             <div className="flex-1">
-              <strong className="font-semibold block text-rose-200">Error Loading/Saving Profile</strong>
+              <strong className="font-semibold block text-rose-700 dark:text-rose-200">Error</strong>
               <span>{error}</span>
             </div>
           </div>
@@ -237,21 +240,21 @@ export const ProfilePage = () => {
 
         {/* Profile Form */}
         {isLoading ? (
-          <div className="p-8 rounded-3xl bg-slate-900/40 border border-slate-800/80 animate-pulse space-y-6">
-            <div className="h-6 w-32 bg-slate-800 rounded" />
+          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 animate-pulse space-y-6">
+            <div className="h-6 w-32 bg-slate-200 dark:bg-slate-800 rounded" />
             <div className="space-y-4">
-              <div className="h-10 w-full bg-slate-800/60 rounded-xl" />
-              <div className="h-20 w-full bg-slate-800/60 rounded-xl" />
-              <div className="h-10 w-full bg-slate-800/60 rounded-xl" />
+              <div className="h-10 w-full bg-slate-100 dark:bg-slate-800/60 rounded-xl" />
+              <div className="h-20 w-full bg-slate-100 dark:bg-slate-800/60 rounded-xl" />
+              <div className="h-10 w-full bg-slate-100 dark:bg-slate-800/60 rounded-xl" />
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-xl shadow-xl space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-4">
               <div>
-                <h3 className="text-lg font-bold text-white tracking-tight">Personal & Professional Context</h3>
-                <p className="text-xs text-slate-400">
-                  This background profile is used by your assistant to tailor contextual responses.
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Personal & Professional Context</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Your assistant uses this to tailor responses to you.
                 </p>
               </div>
               <Badge variant="cyan" className="text-[10px]">
@@ -262,23 +265,23 @@ export const ProfilePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Role */}
               <div className="space-y-2">
-                <label className="block text-xs font-mono text-slate-300 flex items-center gap-1.5">
-                  <Briefcase className="w-3.5 h-3.5 text-cyan-400" />
+                <label className="block text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                  <Briefcase className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
                   Role / Occupation
                 </label>
                 <input
                   type="text"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  placeholder="e.g. Full-Stack Developer, Student, Data Scientist"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all font-sans"
+                  placeholder="e.g. Full-Stack Developer, Student, Designer"
+                  className={inputClass}
                 />
               </div>
 
               {/* Location */}
               <div className="space-y-2">
-                <label className="block text-xs font-mono text-slate-300 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                <label className="block text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
                   Location
                 </label>
                 <input
@@ -286,59 +289,59 @@ export const ProfilePage = () => {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="e.g. San Francisco, CA or London, UK"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all font-sans"
+                  className={inputClass}
                 />
               </div>
 
               {/* Skills */}
               <div className="space-y-2 md:col-span-2">
-                <label className="block text-xs font-mono text-slate-300 flex items-center gap-1.5">
-                  <Code2 className="w-3.5 h-3.5 text-cyan-400" />
-                  Skills & Expertise (Comma-separated)
+                <label className="block text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                  <Code2 className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
+                  Skills & Expertise (comma-separated)
                 </label>
                 <input
                   type="text"
                   value={skillsInput}
                   onChange={(e) => setSkillsInput(e.target.value)}
                   placeholder="e.g. JavaScript, React, Node.js, Python, UI Design"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all font-sans"
+                  className={inputClass}
                 />
               </div>
 
               {/* Interests */}
               <div className="space-y-2 md:col-span-2">
-                <label className="block text-xs font-mono text-slate-300 flex items-center gap-1.5">
-                  <Heart className="w-3.5 h-3.5 text-cyan-400" />
-                  Interests & Topics (Comma-separated)
+                <label className="block text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                  <Heart className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
+                  Interests & Topics (comma-separated)
                 </label>
                 <input
                   type="text"
                   value={interestsInput}
                   onChange={(e) => setInterestsInput(e.target.value)}
-                  placeholder="e.g. Artificial Intelligence, Robotics, Sci-Fi Novels, Chess"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all font-sans"
+                  placeholder="e.g. AI, Robotics, Sci-Fi Novels, Chess"
+                  className={inputClass}
                 />
               </div>
 
               {/* Bio */}
               <div className="space-y-2 md:col-span-2">
-                <label className="block text-xs font-mono text-slate-300 flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-cyan-400" />
+                <label className="block text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
                   Personal Bio / Summary
                 </label>
                 <textarea
                   rows={3}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  placeholder="Write a brief overview of yourself and how you like your assistant to interact with you..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all resize-none font-sans"
+                  placeholder="Write a brief overview of yourself and how you'd like your assistant to interact with you..."
+                  className={`${inputClass} resize-none`}
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end pt-4 border-t border-slate-800/80">
+            <div className="flex items-center justify-end pt-4 border-t border-slate-100 dark:border-slate-800/80">
               <Button variant="glow" type="submit" disabled={isSaving} icon={isSaving ? Loader2 : Save}>
-                {isSaving ? 'Saving Changes...' : 'Save Profile'}
+                {isSaving ? 'Saving...' : 'Save Profile'}
               </Button>
             </div>
           </form>
@@ -346,12 +349,11 @@ export const ProfilePage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-6 px-4 text-center text-xs text-slate-600 font-mono border-t border-slate-900 mt-12 relative z-10">
-        User Profile Management
+      <footer className="w-full py-6 px-4 text-center text-xs text-slate-400 dark:text-slate-600 font-mono border-t border-slate-200 dark:border-slate-900 mt-12 relative z-10">
+        User Profile
       </footer>
     </div>
   )
 }
 
 export default ProfilePage
-

@@ -17,7 +17,7 @@ export const DashboardPage = () => {
   } = useChat()
 
   const assistantName =
-    assistant?.name || assistant?.assistantName || 'Neural Assistant'
+    assistant?.name || assistant?.assistantName || 'Jarvis'
   const wakeWord = assistant?.wakeWord || `Hey ${assistantName}`
 
   const handleSelectPrompt = (promptText) => {
@@ -37,8 +37,8 @@ export const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-hidden">
-      {/* Background ambient lighting fields */}
+    <div className="h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-800 dark:selection:text-cyan-200 relative overflow-hidden transition-colors duration-200">
+      {/* Background ambient lighting */}
       <div className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
       <div className="fixed bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
@@ -49,8 +49,8 @@ export const DashboardPage = () => {
         messageCount={messages.length}
       />
 
-      {/* Center Interactive Chat & Presence Canvas */}
-      <main className="flex-1 flex flex-col w-full relative z-10 overflow-hidden">
+      {/* Center Interactive Chat Canvas */}
+      <main className="flex-1 flex flex-col w-full relative z-10 overflow-hidden min-h-0">
         <ChatContainer
           messages={messages}
           isLoading={isLoading}
@@ -60,7 +60,7 @@ export const DashboardPage = () => {
           onSelectPrompt={handleSelectPrompt}
         />
 
-        {/* Bottom Message Input & Voice Composer */}
+        {/* Bottom Message Composer (always accessible and pinned) */}
         <MessageComposer
           onSendMessage={handleSendMessage}
           isLoading={isLoading}

@@ -47,11 +47,11 @@ export const ConversationHistoryList = ({ conversations, onItemClick }) => {
       {Object.entries(grouped).map(([dateLabel, items]) => (
         <div key={dateLabel} className="space-y-3">
           {/* Section Date Header */}
-          <div className="flex items-center gap-2 px-1 text-xs font-mono font-semibold text-slate-400 uppercase tracking-wider">
-            <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="flex items-center gap-2 px-1 text-xs font-mono font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            <Calendar className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
             <span>{dateLabel}</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-normal">
-              {items.length} {items.length === 1 ? 'interaction' : 'interactions'}
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-normal">
+              {items.length} {items.length === 1 ? 'conversation' : 'conversations'}
             </span>
           </div>
 
@@ -72,4 +72,3 @@ export const ConversationHistoryList = ({ conversations, onItemClick }) => {
 }
 
 export default ConversationHistoryList
-

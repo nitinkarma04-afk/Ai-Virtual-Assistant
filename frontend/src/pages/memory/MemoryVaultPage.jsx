@@ -21,7 +21,7 @@ import { AddMemoryModal } from '../../components/memory/AddMemoryModal'
 
 export const MemoryVaultPage = () => {
   const { assistant } = useAuth()
-  const assistantName = assistant?.name || assistant?.assistantName || 'Neural Assistant'
+  const assistantName = assistant?.name || assistant?.assistantName || 'Your Assistant'
 
   const [memories, setMemories] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -109,7 +109,7 @@ export const MemoryVaultPage = () => {
       } else {
         await fetchMemories(false)
       }
-      setSuccessMessage('Memory fact saved successfully!')
+      setSuccessMessage('Memory saved successfully!')
       setIsAddModalOpen(false)
     } catch (err) {
       console.error('Failed to save memory:', err)
@@ -127,7 +127,7 @@ export const MemoryVaultPage = () => {
     try {
       await memoryService.deleteMemory(memoryToDelete.key)
       setMemories((prev) => prev.filter((m) => m.key !== memoryToDelete.key))
-      setSuccessMessage(`Memory for "${memoryToDelete.key}" deleted successfully.`)
+      setSuccessMessage(`Memory "${memoryToDelete.key}" deleted.`)
       setMemoryToDelete(null)
     } catch (err) {
       console.error('Failed to delete memory:', err)
@@ -138,13 +138,13 @@ export const MemoryVaultPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-700 dark:selection:text-cyan-200 relative overflow-x-hidden transition-colors duration-200">
       {/* Background Ambient Lighting */}
-      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
-      <div className="fixed bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="fixed bottom-10 right-10 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Top Header / Navigation Bar */}
-      <header className="w-full px-4 sm:px-6 py-4 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 sticky top-0 z-40">
+      <header className="w-full px-4 sm:px-6 py-4 backdrop-blur-xl bg-white/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800/80 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link to="/dashboard">
@@ -152,24 +152,24 @@ export const MemoryVaultPage = () => {
                 variant="ghost"
                 size="sm"
                 icon={ArrowLeft}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 title="Return to Dashboard"
               >
                 <span className="hidden sm:inline">Dashboard</span>
               </Button>
             </Link>
 
-            <div className="h-5 w-[1px] bg-slate-800 hidden sm:block" />
+            <div className="h-5 w-[1px] bg-slate-200 dark:bg-slate-800 hidden sm:block" />
 
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
                 <Brain className="w-4 h-4" />
               </div>
               <div>
-                <h1 className="text-base font-bold text-white tracking-tight leading-none">
+                <h1 className="text-base font-bold text-slate-900 dark:text-white tracking-tight leading-none">
                   Memory Vault
                 </h1>
-                <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                   {memories.length} {memories.length === 1 ? 'stored fact' : 'stored facts'}
                 </p>
               </div>
@@ -184,7 +184,7 @@ export const MemoryVaultPage = () => {
               onClick={() => fetchMemories(true)}
               disabled={isLoading}
               title="Refresh memories"
-              className="text-slate-400 hover:text-cyan-300"
+              className="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300"
             />
 
             <Button
@@ -203,37 +203,37 @@ export const MemoryVaultPage = () => {
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 relative z-10 space-y-6">
         {/* Page Hero Banner */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-xl shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 backdrop-blur-xl shadow-sm dark:shadow-xl">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Badge variant="cyan" dot className="text-[10px] py-0.5">
-                Long-Term Knowledge
+                Personal Knowledge
               </Badge>
-              <span className="text-xs text-slate-500 font-mono">• {assistantName}</span>
+              <span className="text-xs text-slate-400 dark:text-slate-500 font-mono">• {assistantName}</span>
             </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">Stored Knowledge & Preferences</h2>
-            <p className="text-sm text-slate-400 max-w-xl">
-              Knowledge extracted automatically during chat or added manually. Your assistant uses these persistent facts to personalize responses.
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Stored Facts & Preferences</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl">
+              Facts your assistant learns during chat or that you add manually. These help personalize every conversation.
             </p>
           </div>
         </div>
 
         {/* Notifications (Success & Error) */}
         {successMessage && (
-          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-emerald-300 text-sm animate-fadeIn">
-            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-400" />
+          <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-3 text-emerald-700 dark:text-emerald-300 text-sm animate-fadeIn">
+            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-500 dark:text-emerald-400" />
             <span className="flex-1">{successMessage}</span>
           </div>
         )}
 
         {error && (
-          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-3 text-rose-300 text-sm">
-            <AlertCircle className="w-5 h-5 shrink-0 text-rose-400 mt-0.5" />
+          <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 flex items-start gap-3 text-rose-600 dark:text-rose-300 text-sm">
+            <AlertCircle className="w-5 h-5 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
             <div className="flex-1">
-              <strong className="font-semibold block text-rose-200 font-sans">Operation Error</strong>
+              <strong className="font-semibold block text-rose-700 dark:text-rose-200">Something went wrong</strong>
               <span>{error}</span>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => fetchMemories(true)} className="text-rose-300 hover:text-white">
+            <Button variant="ghost" size="sm" onClick={() => fetchMemories(true)} className="text-rose-500 dark:text-rose-300 hover:text-rose-700 dark:hover:text-white">
               Retry
             </Button>
           </div>
@@ -242,18 +242,18 @@ export const MemoryVaultPage = () => {
         {/* Search & Filter Bar */}
         {(memories.length > 0 || searchQuery) && (
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search memories by topic key or stored value..."
-              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-slate-900/80 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all font-sans"
+              placeholder="Search memories..."
+              className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 dark:focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-400/30 dark:focus:ring-cyan-500/30 transition-all shadow-sm dark:shadow-none font-sans"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-500 hover:text-slate-300"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
               >
                 Clear
               </button>
@@ -282,8 +282,8 @@ export const MemoryVaultPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-6 px-4 text-center text-xs text-slate-600 font-mono border-t border-slate-900 mt-12 relative z-10">
-        Memory Vault Repository • {assistantName}
+      <footer className="w-full py-6 px-4 text-center text-xs text-slate-400 dark:text-slate-600 font-mono border-t border-slate-200 dark:border-slate-900 mt-12 relative z-10">
+        Memory Vault • {assistantName}
       </footer>
 
       {/* Add Memory Modal */}
@@ -296,15 +296,15 @@ export const MemoryVaultPage = () => {
 
       {/* Delete Confirmation Modal */}
       {memoryToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-md p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-5">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 dark:bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+          <div className="w-full max-w-md p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 flex items-center justify-center text-rose-500 dark:text-rose-400">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-white tracking-tight">Delete Memory Entry?</h3>
-              <p className="text-sm text-slate-400">
-                Are you sure you want to delete the memory fact for <strong className="text-cyan-300">{memoryToDelete.key}</strong>? Your assistant will no longer remember this preference.
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Delete Memory?</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Are you sure you want to delete the memory for <strong className="text-cyan-600 dark:text-cyan-300">{memoryToDelete.key}</strong>? Your assistant will no longer remember this.
               </p>
             </div>
             <div className="flex items-center justify-end gap-3 pt-2">

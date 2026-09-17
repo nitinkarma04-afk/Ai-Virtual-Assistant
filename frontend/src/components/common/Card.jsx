@@ -11,15 +11,16 @@ export const Card = ({
   const baseStyles = 'rounded-2xl transition-all duration-300 relative overflow-hidden'
 
   const variantStyles = {
-    glass: 'bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 shadow-2xl',
-    solid: 'bg-slate-900 border border-slate-800 shadow-xl',
-    glow: 'bg-slate-900/70 backdrop-blur-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10',
+    glass:
+      'bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-md dark:shadow-2xl',
+    solid: 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md dark:shadow-xl',
+    glow: 'bg-white/90 dark:bg-slate-900/70 backdrop-blur-xl border border-cyan-500/30 dark:border-cyan-500/20 shadow-lg shadow-cyan-500/5 dark:shadow-cyan-500/10',
     interactive:
-      'bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 hover:border-cyan-500/40 hover:shadow-cyan-500/10 hover:shadow-xl cursor-pointer',
+      'bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 hover:border-cyan-500/40 hover:shadow-cyan-500/10 hover:shadow-lg cursor-pointer',
   }
 
   const hoverStyles = hover
-    ? 'hover:border-cyan-500/40 hover:-translate-y-0.5 hover:shadow-2xl transition-transform duration-200'
+    ? 'hover:border-cyan-500/40 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-200'
     : ''
 
   return (

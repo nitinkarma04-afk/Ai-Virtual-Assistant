@@ -23,33 +23,33 @@ export const ChatContainer = ({
   const hasMessages = messages.length > 0
 
   return (
-    <div className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 overflow-y-auto flex flex-col justify-between">
+    <div className="flex-1 w-full max-w-4xl mx-auto px-3 sm:px-6 py-3 sm:py-6 overflow-y-auto overflow-x-hidden flex flex-col justify-between min-h-0">
       {!hasMessages ? (
-        /* Empty Conversation State with Central Assistant Orb */
-        <div className="my-auto flex flex-col items-center justify-center text-center space-y-6 py-8 animate-fade-in">
-          {/* Dynamic Assistant Orb Presence */}
+        /* Empty Conversation State */
+        <div className="my-auto flex flex-col items-center justify-center text-center space-y-4 sm:space-y-6 py-4 sm:py-8 animate-fade-in w-full">
+          {/* Assistant Orb Visualizer */}
           <div className="relative">
             <AssistantOrb state={assistantState} />
           </div>
 
-          <div className="space-y-2 max-w-lg">
+          <div className="space-y-1.5 sm:space-y-2 max-w-lg px-2">
             <div className="inline-flex items-center gap-2 mb-1">
-              <Badge variant="cyan" dot className="text-xs font-mono">
-                NEURAL CORE ONLINE
+              <Badge variant="cyan" dot className="text-[10px] sm:text-xs font-mono">
+                ASSISTANT ONLINE
               </Badge>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              I am <span className="text-cyan-400">{assistantName}</span>.
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Hello, I am <span className="text-cyan-600 dark:text-cyan-400">{assistantName}</span>.
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-              How can I assist your workflow today? Type your command below or activate hands-free
-              with <strong className="text-cyan-300 font-mono">“{wakeWord}”</strong>.
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              How can I help you today? Ask a question, give instructions, or activate hands-free mode
+              with <strong className="text-cyan-700 dark:text-cyan-300 font-mono font-normal">“{wakeWord}”</strong>.
             </p>
           </div>
 
           {/* Quick Starter Suggestions */}
           {onSelectPrompt && (
-            <div className="pt-4 w-full">
+            <div className="pt-2 sm:pt-4 w-full">
               <SuggestedPrompts
                 assistantName={assistantName}
                 onSelectPrompt={onSelectPrompt}
@@ -59,7 +59,7 @@ export const ChatContainer = ({
         </div>
       ) : (
         /* Message Thread */
-        <div className="space-y-6 pb-4">
+        <div className="space-y-3.5 sm:space-y-6 pb-2 sm:pb-4 w-full">
           {messages.map((msg) => (
             <MessageBubble
               key={msg.id}
@@ -72,7 +72,7 @@ export const ChatContainer = ({
           {isLoading && <TypingIndicator assistantName={assistantName} />}
 
           {/* Scroll target anchor */}
-          <div ref={bottomRef} className="h-2" />
+          <div ref={bottomRef} className="h-1" />
         </div>
       )}
     </div>
