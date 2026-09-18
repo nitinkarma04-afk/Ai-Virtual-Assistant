@@ -128,6 +128,17 @@ export const chatService = {
     const response = await api.post('/ai/chat', {
       message: payload.message,
     })
+
+    return response.data
+  },
+
+  // Save a conversation/action to persistent history
+  saveConversation: async (payload) => {
+    const response = await api.post('/conversation/save', {
+      message: payload.message,
+      response: payload.response,
+    })
+
     return response.data
   },
 
@@ -141,7 +152,6 @@ export const chatService = {
     return response.data
   },
 }
-
 // Long-Term Memory Services
 export const memoryService = {
   getMemories: async () => {

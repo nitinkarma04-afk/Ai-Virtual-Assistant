@@ -3,8 +3,14 @@ import { ArrowUp, Loader2, Sparkles, X } from 'lucide-react'
 import { VoiceButton } from './VoiceButton'
 import { cn } from '../../utils/cn'
 
+import {
+  detectAssistantAction,
+  executeAssistantAction,
+} from '../../utils/assistantActions'
+
 export const MessageComposer = ({
   onSendMessage,
+  onAction,
   isLoading = false,
   assistantName = 'Assistant',
   onListeningChange,
@@ -23,17 +29,40 @@ export const MessageComposer = ({
   }, [input])
 
   const handleSubmit = (e) => {
-    if (e) e.preventDefault()
-    const trimmed = input.trim()
-    if (!trimmed || isLoading) return
+  if (e) e.preventDefault()
 
-    onSendMessage(trimmed)
+  const trimmed = input.trim()
+
+  if (!trimmed || isLoading) return
+
+  // Check for direct assistant action
+  const action = detectAssistantAction(trimmed)
+
+  if (action) {
+    executeAssistantAction(action)
+
+    if (onAction) {
+      onAction(action)
+    }
+
     setInput('')
+
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto'
     }
+
+    return
   }
 
+  // Normal AI message
+  onSendMessage(trimmed)
+
+  setInput('')
+
+  if (textareaRef.current) {
+    textareaRef.current.style.height = 'auto'
+  }
+}
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
