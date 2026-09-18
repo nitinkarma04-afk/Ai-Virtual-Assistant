@@ -16,7 +16,7 @@ export const DashboardPage = () => {
   assistantState,
   setAssistantState,
   sendMessage,
-  addAssistantMessage,
+  addActionConversation,
   clearMessages,
 } = useChat()
 
@@ -45,16 +45,33 @@ export const DashboardPage = () => {
     }
   }
 
- const handleAssistantAction = (action) => {
+  // Handle direct browser actions
+  const handleAssistantAction = (action) => {
   if (!action) return
 
   console.log('Assistant action executed:', action)
 
-  addAssistantMessage(
-    `Opening ${action.name}...`,
+  let responseText = ''
+
+  if (action.type === 'OPEN_WEBSITE') {
+    responseText = `🌐 Opening ${action.name}...`
+  }
+
+  if (action.type === 'SEARCH_WEBSITE') {
+    responseText = `🔎 Searching ${action.name} for "${action.query}"...`
+  }
+
+  if (!responseText) {
+    responseText = 'Done.'
+  }
+
+  addActionConversation(
+    action.command,
+    responseText,
     action
   )
 }
+
   return (
     <div className="h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-800 dark:selection:text-cyan-200 relative overflow-hidden transition-colors duration-200">
 

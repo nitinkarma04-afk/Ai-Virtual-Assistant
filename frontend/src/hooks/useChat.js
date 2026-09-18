@@ -156,6 +156,63 @@ export const useChat = () => {
    * Useful for browser/device actions such as:
    * "Opening YouTube..."
    */
+
+
+  const addActionConversation = async (
+  command,
+  responseText,
+  actionData = null
+) => {
+  if (!command || !responseText) return
+
+  const timestamp = new Date().toISOString()
+
+  const userMessage = {
+    id: `usr-action-${Date.now()}`,
+    sender: 'user',
+    text: command,
+    timestamp,
+  }
+
+  const assistantMessage = {
+    id: `ast-action-${Date.now() + 1}`,
+    sender: 'assistant',
+    text: responseText,
+    timestamp,
+    actionData,
+    isLocalAction: true,
+  }
+
+  // Immediately show both messages in chat
+  setMessages((prev) => [
+    ...prev,
+    userMessage,
+    assistantMessage,
+  ])
+
+  setAssistantState('speaking')
+
+  if (speakingTimeoutRef.current) {
+    clearTimeout(speakingTimeoutRef.current)
+  }
+
+  speakingTimeoutRef.current = setTimeout(() => {
+    setAssistantState('idle')
+  }, 2500)
+
+  // Save conversation to backend
+  try {
+    await chatService.saveConversation({
+      message: command,
+      response: responseText,
+    })
+  } catch (err) {
+    console.warn(
+      'Action conversation save notice:',
+      err?.message || err
+    )
+  }
+}
  const addAssistantMessage = async (text, actionData = null) => {
   if (!text) return
 
@@ -310,17 +367,17 @@ export const useChat = () => {
       // Local state is already cleared
     }
   }
-
-  return {
-    messages,
-    isLoading,
-    error,
-    assistantState,
-    setAssistantState,
-    sendMessage,
-    addAssistantMessage,
-    clearMessages,
-  }
+return {
+  messages,
+  isLoading,
+  error,
+  assistantState,
+  setAssistantState,
+  sendMessage,
+  addAssistantMessage,
+  addActionConversation,
+  clearMessages,
+}
 }
 
 export default useChat
