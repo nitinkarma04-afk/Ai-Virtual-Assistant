@@ -139,10 +139,16 @@ If unsure, use:
         let result;
 
         try {
-            result = JSON.parse(cleanedContent);
+            const jsonMatch = cleanedContent.match(/\{[\s\S]*?\}/);
+            result = JSON.parse(jsonMatch ? jsonMatch[0] : cleanedContent);
         } catch (jsonError) {
+            const regexMatch = content.match(/"intent"\s*:\s*"([a-z_]+)"/i);
+            if (regexMatch && allowedIntents.includes(regexMatch[1].toLowerCase())) {
+                return regexMatch[1].toLowerCase();
+            }
+
             console.warn(
-                "Intent AI returned invalid JSON. Using fallback intent."
+                "Intent AI returned non-standard format. Using fallback intent."
             );
 
             return "general_question";

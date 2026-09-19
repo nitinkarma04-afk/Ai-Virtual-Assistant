@@ -1,72 +1,98 @@
+import { isSensitiveInfo, normalizeMemoryKey } from "../utils/memory.utils.js";
+
+// Phrases that indicate normal knowledge questions or commands which must NEVER be extracted as memories
+const NON_MEMORY_PATTERNS = [
+    /^(?:what is|what are|explain|how to|how does|how do|why is|why does|tell me about|define|describe)\b/i,
+    /^(?:open|launch|visit|start|go to)\b/i,
+    /^(?:search|find|lookup)\b/i,
+    /^(?:hello|hi|hey|greetings|good morning|good evening|good afternoon)\b/i,
+];
+
 const extractMemories = async (message) => {
     try {
+        if (!message || typeof message !== "string") {
+            return [];
+        }
+
+        const trimmed = message.trim();
+
+        // 1. Sensitive Data Check - never extract sensitive data
+        if (isSensitiveInfo(trimmed)) {
+            return [];
+        }
+
+        // 2. Filter out normal technical, general questions, greetings, or browser commands
+        if (NON_MEMORY_PATTERNS.some((pattern) => pattern.test(trimmed))) {
+            return [];
+        }
+
+        // 3. Must contain some personal statement or memory marker
+        const hasPersonalMarker =
+            /\b(my|i am|i use|i work|i live|i prefer|i like|i love|remember|don't forget|keep in mind)\b/i.test(
+                trimmed
+            );
+
+        if (!hasPersonalMarker) {
+            return [];
+        }
+
         const response = await fetch(
             "https://openrouter.ai/api/v1/chat/completions",
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
                 },
                 body: JSON.stringify({
                     model: "openrouter/free",
-
                     messages: [
                         {
                             role: "system",
                             content: `
-You are a memory extraction assistant.
+You are a precise memory extraction assistant.
 
-Your job is to identify important information about the user
-that should be remembered for future conversations.
+Your job is to identify important, persistent personal facts about the user that should be remembered for future conversations.
 
-Only save long-term useful information such as:
-
+Only save long-term useful facts such as:
 - user's name
-- preferred programming language
+- preferred programming language or tool
 - favorite things
-- important preferences
-- user's goals
+- important persistent preferences
+- user's primary goals
 - user's profession or role
 
 Do NOT save:
+- temporary questions or queries
+- general knowledge explanations
+- normal conversation or greetings
+- one-time requests or action commands
+- passwords, tokens, API keys, or credentials
 
-- temporary questions
-- general knowledge
-- normal conversation
-- one-time requests
-
-You MUST return a JSON object.
-
-The JSON must always follow this exact structure:
-
+You MUST return a JSON object with this exact structure:
 {
     "memories": [
         {
-            "key": "name",
-            "value": "Nitin"
+            "key": "dsa_language",
+            "value": "Java"
         }
     ]
 }
 
 If there is nothing important to remember, return exactly:
-
 {
     "memories": []
 }
 
 Do not return explanations.
-Do not return normal text.
-Do not use markdown.
-Return only JSON.
-                            `,
+Return only valid JSON.
+`,
                         },
                         {
                             role: "user",
-                            content: message,
+                            content: trimmed,
                         },
                     ],
-
                     response_format: {
                         type: "json_object",
                     },
@@ -78,15 +104,10 @@ Return only JSON.
 
         if (!response.ok) {
             console.error("Memory AI Error:", data);
-
-            throw new Error(
-                data?.error?.message || "Memory extraction failed"
-            );
+            return [];
         }
 
-        const content =
-            data?.choices?.[0]?.message?.content;
-
+        const content = data?.choices?.[0]?.message?.content;
         if (!content) {
             return [];
         }
@@ -98,21 +119,24 @@ Return only JSON.
                 .trim();
 
             const result = JSON.parse(cleanedContent);
-            
 
             if (!Array.isArray(result?.memories)) {
                 return [];
             }
 
-            return result.memories;
-
-        } catch (parseError) {
-
-            // Invalid AI output should not break the main chat system.
-            // Do not print JSON parse errors in the terminal.
+            // Filter out any sensitive or empty items
+            return result.memories.filter(
+                (m) =>
+                    m &&
+                    m.key &&
+                    m.value &&
+                    !isSensitiveInfo(m.key) &&
+                    !isSensitiveInfo(m.value) &&
+                    normalizeMemoryKey(m.key).length > 0
+            );
+        } catch {
             return [];
         }
-
     } catch (error) {
         console.error("Memory Service Error:", error);
         return [];
