@@ -3,6 +3,7 @@ const { openUrl } = require('../commands/browser.commands')
 const { openFile } = require('../commands/file.commands')
 const { takeScreenshot } = require('../commands/screenshot.commands')
 const { volumeUp, volumeDown, mute } = require('../commands/volume.commands') 
+const { mediaPlayPause } = require('../commands/media.commands')
 
 async function executeAction(action, target) {
   switch (action) {
@@ -26,6 +27,9 @@ async function executeAction(action, target) {
 
     case 'MUTE':
       return mute()
+
+    case 'MEDIA_PLAY_PAUSE':
+      return mediaPlayPause()
 
     default:
       return {
