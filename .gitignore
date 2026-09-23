@@ -14,3 +14,6 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Desktop Agent runtime files
+desktop-agent/screenshots/

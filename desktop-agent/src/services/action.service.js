@@ -1,6 +1,7 @@
 const { openApp } = require('../commands/app.commands')
 const { openUrl } = require('../commands/browser.commands')
 const { openFile } = require('../commands/file.commands')
+const { takeScreenshot } = require('../commands/screenshot.commands')
 
 async function executeAction(action, target) {
   switch (action) {
@@ -12,6 +13,9 @@ async function executeAction(action, target) {
 
     case 'OPEN_FILE':
       return openFile(target)
+
+    case 'SCREENSHOT':
+      return takeScreenshot()
 
     default:
       return {
