@@ -1,5 +1,6 @@
 const { openApp } = require('../commands/app.commands')
 const { openUrl } = require('../commands/browser.commands')
+const { openFile } = require('../commands/file.commands')
 
 async function executeAction(action, target) {
   switch (action) {
@@ -8,6 +9,9 @@ async function executeAction(action, target) {
 
     case 'OPEN_URL':
       return openUrl(target)
+
+    case 'OPEN_FILE':
+      return openFile(target)
 
     default:
       return {
