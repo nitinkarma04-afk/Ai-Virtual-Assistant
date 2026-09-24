@@ -4,6 +4,11 @@ const { openFile } = require('../commands/file.commands')
 const { takeScreenshot } = require('../commands/screenshot.commands')
 const { volumeUp, volumeDown, mute } = require('../commands/volume.commands') 
 const { mediaPlayPause } = require('../commands/media.commands')
+const {
+  shutdown,
+  restart,
+  lock,
+} = require('../commands/system.commands')
 
 async function executeAction(action, target) {
   switch (action) {
@@ -30,6 +35,14 @@ async function executeAction(action, target) {
 
     case 'MEDIA_PLAY_PAUSE':
       return mediaPlayPause()
+
+    case 'SHUTDOWN':
+      return shutdown()
+
+    case 'RESTART':
+      return restart()
+    case 'LOCK':
+      return lock()
 
     default:
       return {
