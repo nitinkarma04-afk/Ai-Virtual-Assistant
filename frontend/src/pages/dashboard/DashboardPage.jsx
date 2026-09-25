@@ -1,24 +1,31 @@
 import React from 'react'
 
 import { useAuth } from '../../hooks/useAuth'
+
 import { useChat } from '../../hooks/useChat'
 
 import { AssistantHeader } from '../../components/assistant/AssistantHeader'
+
 import { ChatContainer } from '../../components/assistant/ChatContainer'
+
 import { MessageComposer } from '../../components/assistant/MessageComposer'
+
+import { executeAssistantAction } from '../../utils/assistantActions'
+
+import { getToken } from '../../utils/token'
 
 export const DashboardPage = () => {
   const { assistant } = useAuth()
 
- const {
-  messages,
-  isLoading,
-  assistantState,
-  setAssistantState,
-  sendMessage,
-  addActionConversation,
-  clearMessages,
-} = useChat()
+  const {
+    messages,
+    isLoading,
+    assistantState,
+    setAssistantState,
+    sendMessage,
+    addActionConversation,
+    clearMessages,
+  } = useChat()
 
   const assistantName =
     assistant?.name ||
@@ -45,42 +52,132 @@ export const DashboardPage = () => {
     }
   }
 
-  // Handle direct browser actions
-  const handleAssistantAction = (action) => {
-  if (!action) return
+  // Execute desktop action through backend
+  const executeDesktopAction = async (action) => {
+    try {
+      // Get logged-in user's JWT token
+      const token = getToken()
 
-  console.log('Assistant action executed:', action)
+      if (!token) {
+        throw new Error('No login token found. Please login again.')
+      }
 
-  let responseText = ''
+      const response = await fetch(
+        'http://localhost:8000/api/desktop/execute',
+        {
+          method: 'POST',
 
-  if (action.type === 'OPEN_WEBSITE') {
-    responseText = `🌐 Opening ${action.name}...`
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+
+          credentials: 'include',
+
+          body: JSON.stringify({
+            action: action.action,
+            target: action.target,
+          }),
+        }
+      )
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data?.message ||
+          data?.result?.error ||
+          'Desktop action failed'
+        )
+      }
+
+      return data
+    } catch (error) {
+      console.error(
+        'Desktop Action Error:',
+        error
+      )
+
+      throw error
+    }
   }
 
-  if (action.type === 'SEARCH_WEBSITE') {
-    responseText = `🔎 Searching ${action.name} for "${action.query}"...`
-  }
+  // Handle direct browser and desktop actions
+  const handleAssistantAction = async (action) => {
+    if (!action) return
 
-  if (!responseText) {
-    responseText = 'Done.'
-  }
+    // Browser actions
+    if (
+      action.type === 'OPEN_WEBSITE' ||
+      action.type === 'SEARCH_WEBSITE'
+    ) {
+      executeAssistantAction(action)
 
-  addActionConversation(
-    action.command,
-    responseText,
-    action
-  )
-}
+      console.log(
+        'Assistant action executed:',
+        action
+      )
+
+      let responseText = ''
+
+      if (action.type === 'OPEN_WEBSITE') {
+        responseText = `🌐 Opening ${action.name}...`
+      }
+
+      if (action.type === 'SEARCH_WEBSITE') {
+        responseText =
+          `🔎 Searching ${action.name} for "${action.query}"...`
+      }
+
+      addActionConversation(
+        action.command,
+        responseText,
+        action
+      )
+
+      return
+    }
+
+    // Desktop actions
+    if (action.type === 'DESKTOP_ACTION') {
+      try {
+        await executeDesktopAction(action)
+
+        let responseText = 'Done.'
+
+        if (action.action === 'OPEN_APP') {
+          responseText =
+            `🖥️ Opening ${action.name}...`
+        }
+
+        addActionConversation(
+          action.command,
+          responseText,
+          action
+        )
+      } catch (error) {
+        addActionConversation(
+          action.command,
+          `❌ ${error.message}`,
+          action
+        )
+      }
+
+      return
+    }
+  }
 
   return (
     <div className="h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-800 dark:selection:text-cyan-200 relative overflow-hidden transition-colors duration-200">
 
       {/* Background ambient lighting */}
+
       <div className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[350px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="fixed bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Top Fixed Assistant Header */}
+
       <AssistantHeader
         assistantState={assistantState}
         onClearChat={clearMessages}
@@ -88,6 +185,7 @@ export const DashboardPage = () => {
       />
 
       {/* Center Interactive Chat Canvas */}
+
       <main className="flex-1 flex flex-col w-full relative z-10 overflow-hidden min-h-0">
 
         <ChatContainer
@@ -100,6 +198,7 @@ export const DashboardPage = () => {
         />
 
         {/* Bottom Message Composer */}
+
         <MessageComposer
           onSendMessage={handleSendMessage}
           onAction={handleAssistantAction}

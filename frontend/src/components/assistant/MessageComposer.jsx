@@ -2,10 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { ArrowUp, Loader2, Sparkles, X } from 'lucide-react'
 import { VoiceButton } from './VoiceButton'
 import { cn } from '../../utils/cn'
-
 import {
   detectAssistantAction,
-  executeAssistantAction,
 } from '../../utils/assistantActions'
 
 export const MessageComposer = ({
@@ -39,20 +37,18 @@ export const MessageComposer = ({
   const action = detectAssistantAction(trimmed)
 
   if (action) {
-    executeAssistantAction(action)
-
-    if (onAction) {
-      onAction(action)
-    }
-
-    setInput('')
-
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-    }
-
-    return
+  if (onAction) {
+    onAction(action)
   }
+
+  setInput('')
+
+  if (textareaRef.current) {
+    textareaRef.current.style.height = 'auto'
+  }
+
+  return
+}
 
   // Normal AI message
   onSendMessage(trimmed)

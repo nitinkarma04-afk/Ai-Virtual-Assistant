@@ -60,6 +60,19 @@ const WEBSITE_ACTIONS = {
   },
 }
 
+
+// desktop-actions 
+const DESKTOP_APP_ACTIONS = {
+  vscode: {
+    name: 'VS Code',
+  },
+  notepad: {
+    name: 'Notepad',
+  },
+  calculator: {
+    name: 'Calculator',
+  },
+}
 // Joined site key list for use in regex patterns
 const SITE_KEYS = Object.keys(WEBSITE_ACTIONS).join('|')
 
@@ -105,6 +118,31 @@ export function detectAssistantAction(command) {
     .replace(/\s+please\s*$/, '')
     .trim()
 
+
+
+    // DESKTOP APP ACTION
+  const desktopAppRx =
+    /^(?:(?:can you|could you|would you|jarvis)\s+)?(?:please\s+)?(?:open|launch|start)\s+(?:the\s+)?(vscode|vs code|notepad|calculator)$/i
+
+  const desktopAppMatch = lower.match(desktopAppRx)
+
+  if (desktopAppMatch) {
+    const appKey = desktopAppMatch[1]
+      .toLowerCase()
+      .replace(/\s+/g, '')
+
+    const app = DESKTOP_APP_ACTIONS[appKey]
+
+    if (app) {
+      return {
+        type: 'DESKTOP_ACTION',
+        action: 'OPEN_APP',
+        target: appKey,
+        name: app.name,
+        command: raw,
+      }
+    }
+  }
   // ----------------------------------------------------------------
   // GUARD: Explicit AI-question patterns must NEVER trigger actions.
   // These questions mention a site name but are clearly conversational.

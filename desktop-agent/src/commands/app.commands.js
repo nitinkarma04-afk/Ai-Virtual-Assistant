@@ -1,14 +1,24 @@
+
 const { spawn } = require('child_process')
 
 const ALLOWED_APPS = {
   notepad: 'notepad.exe',
   calculator: 'calc.exe',
   chrome: 'chrome.exe',
+  vscode: 'code.cmd',
 }
 
 function openApp(appName) {
+
+   
+
+
   const key = appName.toLowerCase().trim()
+   console.log('Normalized app key:', key)
   const executable = ALLOWED_APPS[key]
+
+ 
+  
 
   if (!executable) {
     return {
@@ -19,10 +29,10 @@ function openApp(appName) {
 
   try {
     const process = spawn(executable, [], {
-      detached: true,
-      stdio: 'ignore',
-      shell: false,
-    })
+  detached: true,
+  stdio: 'ignore',
+  shell: true,
+})
 
     process.unref()
 

@@ -12,9 +12,7 @@ export const useChat = () => {
   const [messages, setMessages] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
-
   const [assistantState, setAssistantState] = useState('idle')
-
   const speakingTimeoutRef = useRef(null)
 
   // Fetch past conversation history from backend if available
@@ -77,7 +75,9 @@ export const useChat = () => {
 
                 sender:
                   item?.sender ||
-                  (item?.role === 'user' ? 'user' : 'assistant'),
+                  (item?.role === 'user'
+                    ? 'user'
+                    : 'assistant'),
 
                 text:
                   item?.text ||
@@ -140,9 +140,17 @@ export const useChat = () => {
     if (data?.text) return data.text
     if (data?.content) return data.content
 
-    if (data?.data?.response) return data.data.response
-    if (data?.data?.message) return data.data.message
-    if (data?.data?.reply) return data.data.reply
+    if (data?.data?.response) {
+      return data.data.response
+    }
+
+    if (data?.data?.message) {
+      return data.data.message
+    }
+
+    if (data?.data?.reply) {
+      return data.data.reply
+    }
 
     return typeof data === 'object'
       ? JSON.stringify(data)
@@ -156,105 +164,108 @@ export const useChat = () => {
    * Useful for browser/device actions such as:
    * "Opening YouTube..."
    */
-
-
   const addActionConversation = async (
-  command,
-  responseText,
-  actionData = null
-) => {
-  if (!command || !responseText) return
+    command,
+    responseText,
+    actionData = null
+  ) => {
+    if (!command || !responseText) return
 
-  const timestamp = new Date().toISOString()
+    const timestamp = new Date().toISOString()
 
-  const userMessage = {
-    id: `usr-action-${Date.now()}`,
-    sender: 'user',
-    text: command,
-    timestamp,
-  }
+    const userMessage = {
+      id: `usr-action-${Date.now()}`,
+      sender: 'user',
+      text: command,
+      timestamp,
+    }
 
-  const assistantMessage = {
-    id: `ast-action-${Date.now() + 1}`,
-    sender: 'assistant',
-    text: responseText,
-    timestamp,
-    actionData,
-    isLocalAction: true,
-  }
+    const assistantMessage = {
+      id: `ast-action-${Date.now() + 1}`,
+      sender: 'assistant',
+      text: responseText,
+      timestamp,
+      actionData,
+      isLocalAction: true,
+    }
 
-  // Immediately show both messages in chat
-  setMessages((prev) => [
-    ...prev,
-    userMessage,
-    assistantMessage,
-  ])
+    // Immediately show both messages in chat
+    setMessages((prev) => [
+      ...prev,
+      userMessage,
+      assistantMessage,
+    ])
 
-  setAssistantState('speaking')
+    setAssistantState('speaking')
 
-  if (speakingTimeoutRef.current) {
-    clearTimeout(speakingTimeoutRef.current)
-  }
+    if (speakingTimeoutRef.current) {
+      clearTimeout(speakingTimeoutRef.current)
+    }
 
-  speakingTimeoutRef.current = setTimeout(() => {
-    setAssistantState('idle')
-  }, 2500)
+    speakingTimeoutRef.current = setTimeout(() => {
+      setAssistantState('idle')
+    }, 2500)
 
-  // Save conversation to backend
-  try {
-    await chatService.saveConversation({
-      message: command,
-      response: responseText,
-    })
-  } catch (err) {
-    console.warn(
-      'Action conversation save notice:',
-      err?.message || err
-    )
-  }
-}
- const addAssistantMessage = async (text, actionData = null) => {
-  if (!text) return
-
-  const assistantMessage = {
-    id: `ast-local-${Date.now()}`,
-    sender: 'assistant',
-    text,
-    timestamp: new Date().toISOString(),
-    actionData,
-    isLocalAction: true,
-  }
-
-  setMessages((prev) => [
-    ...prev,
-    assistantMessage,
-  ])
-
-  setAssistantState('speaking')
-
-  if (speakingTimeoutRef.current) {
-    clearTimeout(speakingTimeoutRef.current)
-  }
-
-  speakingTimeoutRef.current = setTimeout(() => {
-    setAssistantState('idle')
-  }, 2500)
-
-  // Save action to backend history
-  if (actionData?.command) {
+    // Save conversation to backend
     try {
       await chatService.saveConversation({
-        message: actionData.command,
-        response: text,
+        message: command,
+        response: responseText,
       })
     } catch (err) {
       console.warn(
-        'Action history save notice:',
+        'Action conversation save notice:',
         err?.message || err
       )
     }
   }
-} 
+
+  const addAssistantMessage = async (
+    text,
+    actionData = null
+  ) => {
+    if (!text) return
+
+    const assistantMessage = {
+      id: `ast-local-${Date.now()}`,
+      sender: 'assistant',
+      text,
+      timestamp: new Date().toISOString(),
+      actionData,
+      isLocalAction: true,
+    }
+
+    setMessages((prev) => [
+      ...prev,
+      assistantMessage,
+    ])
+
+    setAssistantState('speaking')
+
+    if (speakingTimeoutRef.current) {
+      clearTimeout(speakingTimeoutRef.current)
+    }
+
+    speakingTimeoutRef.current = setTimeout(() => {
+      setAssistantState('idle')
+    }, 2500)
+
+    // Save action to backend history
+    if (actionData?.command) {
+      try {
+        await chatService.saveConversation({
+          message: actionData.command,
+          response: text,
+        })
+      } catch (err) {
+        console.warn(
+          'Action history save notice:',
+          err?.message || err
+        )
+      }
+    }
+  }
+
   /**
    * Send a new message to the AI Assistant
    */
@@ -367,17 +378,18 @@ export const useChat = () => {
       // Local state is already cleared
     }
   }
-return {
-  messages,
-  isLoading,
-  error,
-  assistantState,
-  setAssistantState,
-  sendMessage,
-  addAssistantMessage,
-  addActionConversation,
-  clearMessages,
-}
+
+  return {
+    messages,
+    isLoading,
+    error,
+    assistantState,
+    setAssistantState,
+    sendMessage,
+    addAssistantMessage,
+    addActionConversation,
+    clearMessages,
+  }
 }
 
 export default useChat
