@@ -14,7 +14,7 @@ function openApp(appName) {
 
 
   const key = appName.toLowerCase().trim()
-   console.log('Normalized app key:', key)
+   
   const executable = ALLOWED_APPS[key]
 
  
