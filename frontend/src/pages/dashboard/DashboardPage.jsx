@@ -14,6 +14,10 @@ import { executeAssistantAction } from '../../utils/assistantActions'
 
 import { getToken } from '../../utils/token'
 
+// changes 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+
 export const DashboardPage = () => {
   const { assistant } = useAuth()
 
@@ -62,25 +66,23 @@ export const DashboardPage = () => {
         throw new Error('No login token found. Please login again.')
       }
 
+      // changes in production 
+
       const response = await fetch(
-        'http://localhost:8000/api/desktop/execute',
-        {
-          method: 'POST',
-
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-
-          credentials: 'include',
-
-          body: JSON.stringify({
-            action: action.action,
-            target: action.target,
-          }),
-        }
-      )
-
+  `${API_BASE_URL}/desktop/execute`,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      action: action.action,
+      target: action.target,
+    }),
+  }
+)
       const data = await response.json()
 
       if (!response.ok || !data.success) {
